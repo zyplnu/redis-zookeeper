@@ -1,6 +1,5 @@
-package com.redis.zookeeper.lock;
+package com.redis.zookeeper.queue;
 
-import org.apache.log4j.xml.DOMConfigurator;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooKeeper;
@@ -8,7 +7,7 @@ import org.apache.zookeeper.ZooKeeper;
 import java.io.IOException;
 
 /**
- * 分布式锁服务
+ * 建立zookeeper服务连接的辅助类
  */
 public class TestMainClient implements Watcher{
 
@@ -19,9 +18,7 @@ public class TestMainClient implements Watcher{
 
     public TestMainClient(String connectString) {
         if(zk == null){
-            /*String configFile = this.getClass().getResource("/").getPath() + "org/zk/leader/election/log4j.xml";
-            DOMConfigurator.configure(configFile);*/
-            System.out.println("创建一个新的连接：");
+            System.out.println("创建一个新连接");
             try {
                 zk = new ZooKeeper(connectString , sessionTimeout , this);
                 mutex = new Integer(-1);
@@ -32,7 +29,7 @@ public class TestMainClient implements Watcher{
     }
 
     @Override
-    synchronized public void process(WatchedEvent event) {
+    public void process(WatchedEvent event) {
         synchronized (mutex){
             mutex.notify();
         }
